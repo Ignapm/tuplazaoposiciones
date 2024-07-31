@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import "./App.css";
 
 function App() {
   const [educationalStage, setEducationalStage] = useState("");
   const [course, setCourse] = useState("");
   const [subject, setSubject] = useState("");
-  const [task, setTask] = useState("");
+  const [finalTask, setTask] = useState("");
+  const [customTask, setCustomTask] = useState("");
   const [challenge, setChallenge] = useState("");
+  const [response, setResponse] = useState(null);
 
   const handleEducationalStageChange = (event) => {
     setEducationalStage(event.target.value);
@@ -25,9 +27,40 @@ function App() {
     setTask(event.target.value);
   };
 
+  const handleCustomTaskChange = (e) => {
+    setCustomTask(e.target.value);
+  };
+
   const handleChallengeChange = (event) => {
     setChallenge(event.target.value);
   };
+
+  const fetchSituaciones = async () => {
+    const language = "español";
+    const inputData = {
+      finalTask,
+      course,
+      subject,
+      language,
+      challenge,
+    };
+    if (finalTask === "custom") inputData.finalTask = customTask;
+
+    try {
+      const res = await fetch("/api/generate-situations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputData),
+      });
+      const data = await res.json();
+      setResponse(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <Container className="mt-5">
       <h1>Tu plaza oposiciones</h1>
@@ -45,9 +78,8 @@ function App() {
                 <option value="" disabled hidden>
                   --Elige etapa educativa--
                 </option>
-                <option value="option1">Infantil</option>
-                <option value="option2">Primaria</option>
-                <option value="option3">Secundaria</option>
+                <option value="Infantil">Infantil</option>
+                <option value="Primaria">Primaria</option>
               </Form.Control>
             </Form.Group>
           </Col>
@@ -62,12 +94,12 @@ function App() {
                 <option value="" disabled hidden>
                   --Elige curso educativo--
                 </option>
-                <option value="option1">1º Primaria</option>
-                <option value="option2">2º Primaria</option>
-                <option value="option3">3º Primaria</option>
-                <option value="option4">4º Primaria</option>
-                <option value="option5">5º Primaria</option>
-                <option value="option6">6º Primaria</option>
+                <option value="1º Primaria">1º Primaria</option>
+                <option value="2º Primaria">2º Primaria</option>
+                <option value="3º Primaria">3º Primaria</option>
+                <option value="4º Primaria">4º Primaria</option>
+                <option value="5º Primaria">5º Primaria</option>
+                <option value="6º Primaria">6º Primaria</option>
               </Form.Control>
             </Form.Group>
           </Col>
@@ -83,36 +115,57 @@ function App() {
                 <option value="" disabled hidden>
                   --Elige materia--
                 </option>
-                <option value="option1">
+                <option value="Conocimiento del medio Natural, Social y Cultural">
                   Conocimiento del medio Natural, Social y Cultural
                 </option>
-                <option value="option2">Educación Física</option>
-                <option value="option3">Lengua Castellana y Literatura</option>
-                <option value="option4">Lengua Extranjera</option>
-                <option value="option5">Matemáticas</option>
-                <option value="option6">Música y Danza</option>
-                <option value="option7">Plástica y Visual</option>
-                <option value="option8">Valenciano: Lengua y Literatura</option>
+                <option value="Educación Física">Educación Física</option>
+                <option value="Lengua Castellana y Literatura">
+                  Lengua Castellana y Literatura
+                </option>
+                <option value="Lengua Extranjera">Lengua Extranjera</option>
+                <option value="Matemáticas">Matemáticas</option>
+                <option value="Música y Danza">Música y Danza</option>
+                <option value="Plástica y Visual">Plástica y Visual</option>
+                <option value="Valenciano: Lengua y Literatura">
+                  Valenciano: Lengua y Literatura
+                </option>
               </Form.Control>
             </Form.Group>
           </Col>
         </Row>
         <h4> Introduce el reto</h4>
-        <Form.Group controlId="task">
+        <Form.Group controlId="finalTask">
           <Form.Label>Tarea o producto final:</Form.Label>
-          <Form.Control as="select" value={task} onChange={handleTaskChange}>
+          <Form.Control
+            as="select"
+            value={finalTask}
+            onChange={handleTaskChange}
+          >
             <option value="" disabled hidden>
               --Escoge una opción--
             </option>
-            <option value="option1">Guión de teatro</option>
-            <option value="option2">Juego de rol</option>
-            <option value="option3">Presentación interactiva</option>
-            <option value="option4">Mural colectivo</option>
-            <option value="option5">Collage</option>
-            <option value="option6">Webinar</option>
-            <option value="option7">Maqueta</option>
-            <option value="option8">Infografía</option>
+            <option value="Guión de teatro">Guión de teatro</option>
+            <option value="Juego de rol">Juego de rol</option>
+            <option value="Presentación interactiva">
+              Presentación interactiva
+            </option>
+            <option value="Mural colectivo">Mural colectivo</option>
+            <option value="Collage">Collage</option>
+            <option value="Webinar">Webinar</option>
+            <option value="Maqueta">Maqueta</option>
+            <option value="Infografía">Infografía</option>
+            <option value="custom">Otro (especificar)</option>
           </Form.Control>
+          {finalTask === "custom" && (
+            <InputGroup className="mt-3">
+              <Form.Control
+                type="text"
+                placeholder="Especifica tu propia opción"
+                value={customTask}
+                onChange={handleCustomTaskChange}
+              />
+            </InputGroup>
+          )}
         </Form.Group>
         <Form.Group controlId="challenge">
           <Form.Label>Describe el reto:</Form.Label>
@@ -123,6 +176,14 @@ function App() {
             onChange={handleChallengeChange}
             placeholder="Describe el reto aquí..."
           />
+        </Form.Group>
+        <Form.Group>
+          <Button onClick={fetchSituaciones} variant="primary">
+            Enviar
+          </Button>
+        </Form.Group>
+        <Form.Group>
+          {response && <pre>{JSON.stringify(response, null, 2)}</pre>}
         </Form.Group>
       </Form>
     </Container>
