@@ -37,22 +37,40 @@ function App() {
 
   const fetchSituaciones = async () => {
     const language = "español";
-    const inputData = {
-      finalTask,
-      course,
-      subject,
-      language,
-      challenge,
-    };
+    // const inputData = {
+    //   finalTask,
+    //   course,
+    //   subject,
+    //   language,
+    //   challenge,
+    // };
     if (finalTask === "custom") inputData.finalTask = customTask;
 
+    const prompt = `
+    Genera cuatro situaciones de aprendizaje en formato JSON, cada una con su respectivo title, scope y challenge, basadas en los siguientes datos:
+    - finalTask: ${finalTask}
+    - language: ${language}
+    - course: ${course}
+    - materia: ${subject}
+    - challenge: ${challenge}
+    `;
+
     try {
-      const res = await fetch("/api/generate-situations", {
+      const res = await fetch("https://api.openai.com/v1/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization:
+            "Bearer sk-None-lu0Fvf4QxWJeW0T0PpfCT3BlbkFJP9cYJXAlTGsxkVQyNzaH", // Añade aquí la API key
         },
-        body: JSON.stringify(inputData),
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo-instruct",
+          prompt: prompt,
+          max_tokens: 500,
+          n: 1,
+          stop: null,
+          temperature: 0.7,
+        }),
       });
       const data = await res.json();
       setResponse(data);
