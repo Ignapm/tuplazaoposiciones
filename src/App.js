@@ -47,14 +47,9 @@ function App() {
     if (finalTask === "custom") inputData.finalTask = customTask;
 
     const prompt = `
-    Genera cuatro situaciones de aprendizaje en formato JSON, cada una con su respectivo title, scope y challenge, basadas en los siguientes datos:
-    - finalTask: ${finalTask}
-    - language: ${language}
-    - course: ${course}
-    - materia: ${subject}
-    - challenge: ${challenge}
-    `;
-
+    Genera cuatro situaciones de aprendizaje en formato JSON, el idioma que sea en ${language},
+     la tarea final que sea ${finalTask}, el curso que sea ${course}, la materia que sea ${subject}
+     y el desafío que sea "${challenge}". Devuelve el contexto (200 palabras) y título de cada situación.`;
     try {
       const res = await fetch("https://api.openai.com/v1/completions", {
         method: "POST",
