@@ -1,8 +1,8 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./hooks/useAuth";
-import Login from "./components/login";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/dashboard";
+import Login from "./components/login";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
 
 // Componente que protege rutas que requieren autenticación
 function PrivateRoute({ children }) {

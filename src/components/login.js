@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { TextField, Button, Typography, Container, Box } from "@mui/material";
+import { TextField, Button, Container, Box } from "@mui/material";
+import logo from "../assets/logo.png";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -16,7 +17,7 @@ export default function Login() {
     if (!success) {
       setError("Invalid username or password");
     } else {
-      navigate("/dashboard"); // Redirige al Dashboard después de iniciar sesión
+      navigate("/dashboard");
     }
   };
 
@@ -33,9 +34,11 @@ export default function Login() {
         borderRadius: 2,
       }}
     >
-      <Typography variant="h4" component="h1" gutterBottom>
-        Login
-      </Typography>
+      <img
+        src={logo}
+        alt="Tuplazaoposiciones"
+        style={{ width: "100%", maxWidth: "200px", marginBottom: "16px" }}
+      />
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -65,7 +68,14 @@ export default function Login() {
           variant="contained"
           color="primary"
           fullWidth
-          sx={{ mt: 2 }}
+          sx={{
+            mt: 2,
+            bgcolor: "ochre.light",
+            color: "text.primary",
+            "&:hover": {
+              bgcolor: "ochre.dark",
+            },
+          }}
         >
           Login
         </Button>
