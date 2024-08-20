@@ -13,8 +13,8 @@ export default function Dashboard() {
     <div>
       <h2>Dashboard</h2>
       <p>Welcome, {auth.user.username}!</p>
-      <LearningSituations />
       <button onClick={auth.logout}>Logout</button>
+      <LearningSituations />
     </div>
   );
 }

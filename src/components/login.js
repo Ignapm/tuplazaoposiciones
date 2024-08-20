@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { TextField, Button, Container, Box } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Box,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import logo from "../assets/logo.png";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const auth = useAuth();
   const navigate = useNavigate();
@@ -15,10 +24,14 @@ export default function Login() {
     e.preventDefault();
     const success = auth.login(username, password);
     if (!success) {
-      setError("Invalid username or password");
+      setError("Nombre de usuario o contraseña incorrecta.");
     } else {
       navigate("/dashboard");
     }
+  };
+
+  const handleShowPasswordChange = () => {
+    setShowPassword((prev) => !prev);
   };
 
   return (
@@ -45,7 +58,7 @@ export default function Login() {
         sx={{ width: "100%", mt: 1 }}
       >
         <TextField
-          label="Username"
+          label="Usuario"
           variant="outlined"
           fullWidth
           margin="normal"
@@ -54,14 +67,30 @@ export default function Login() {
           required
         />
         <TextField
-          label="Password"
-          type="password"
+          label="Contraseña"
+          type={showPassword ? "text" : "password"}
           variant="outlined"
           fullWidth
           margin="normal"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showPassword}
+              onChange={handleShowPasswordChange}
+              color="primary"
+              sx={{ transform: "scale(0.8)" }}
+            />
+          }
+          label={
+            <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+              Mostrar contraseña
+            </Typography>
+          }
+          sx={{ mt: 1 }}
         />
         <Button
           type="submit"
@@ -77,13 +106,30 @@ export default function Login() {
             },
           }}
         >
-          Login
+          Entrar
         </Button>
         {error && (
           <Typography variant="body2" color="error" sx={{ mt: 2 }}>
             {error}
           </Typography>
         )}
+        <Typography
+          component={Link}
+          to="/forgot-password"
+          variant="body2"
+          sx={{
+            display: "block",
+            textAlign: "center",
+            mt: 2,
+            textDecoration: "none",
+            color: "primary.main",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          }}
+        >
+          ¿Has olvidado tu contraseña?
+        </Typography>
       </Box>
     </Container>
   );

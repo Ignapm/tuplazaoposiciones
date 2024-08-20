@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/dashboard";
+import ForgotPassword from "./components/forgotPassword";
 import Login from "./components/login";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 
@@ -24,6 +25,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         {/* Ruta por defecto redirige al login si no está autenticado */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
