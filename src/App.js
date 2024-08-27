@@ -1,8 +1,8 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Dashboard from "./components/dashboard";
-import ForgotPassword from "./components/forgotPassword";
-import Login from "./components/login";
+import Dashboard from "./components/Dashboard";
+import ForgotPassword from "./components/ForgotPassword";
+import Login from "./components/Login";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 
 // Componente que protege rutas que requieren autenticación
