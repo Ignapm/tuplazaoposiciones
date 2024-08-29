@@ -10,7 +10,7 @@ import {
   Grid,
 } from "@mui/material";
 
-function CreateLearningSituation() {
+function CreateLearningSituation({ onBackToHome }) {
   const [educationalStage, setEducationalStage] = useState("");
   const [course, setCourse] = useState("");
   const [subject, setSubject] = useState("");
@@ -84,9 +84,6 @@ function CreateLearningSituation() {
 
   return (
     <Container sx={{ mt: 5 }}>
-      <Typography variant="h3" gutterBottom>
-        Tu plaza oposiciones
-      </Typography>
       <Typography variant="h5" gutterBottom>
         Genera una situación de aprendizaje
       </Typography>
@@ -219,13 +216,18 @@ function CreateLearningSituation() {
           </Grid>
 
           <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={fetchSituaciones}
-            >
-              Enviar
-            </Button>
+            <Box display="flex" justifyContent="space-between">
+              <Button variant="outlined" color="primary" onClick={onBackToHome}>
+                Volver
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={fetchSituaciones}
+              >
+                Siguiente
+              </Button>
+            </Box>
           </Grid>
 
           <Grid item xs={12}>
@@ -237,4 +239,4 @@ function CreateLearningSituation() {
   );
 }
 
-export default LearningSituations;
+export default CreateLearningSituation;

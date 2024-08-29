@@ -1,117 +1,132 @@
-import {
-  AccountCircle as AccountCircleIcon,
-  Home as HomeIcon,
-  Logout as LogoutIcon,
-  Menu as MenuIcon,
-  School as SchoolIcon,
-} from "@mui/icons-material";
-import {
-  AppBar,
-  Box,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
+import Logo from "../assets/logo.png";
 import { useAuth } from "../hooks/useAuth";
-import LearningSituations from "./LearningSituations";
+import CreateLearningSituation from "./CreateLearningSituation";
 import Home from "./Home";
+import LearningSituations from "./LearningSituations";
 import Profile from "./Profile";
 
 export default function Dashboard() {
   const auth = useAuth();
   const [selectedPage, setSelectedPage] = useState("home");
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const theme = useTheme();
 
   if (!auth.user) {
     return <p>You need to log in to view this page.</p>;
   }
 
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
   const handleMenuClick = (page) => {
     setSelectedPage(page);
-    setDrawerOpen(false);
   };
 
-  const renderPageContent = () => {
-    switch (selectedPage) {
-      case "home":
-        return <Home />;
-      case "learningSituations":
-        return <LearningSituations />;
-      case "profile":
-        return <Profile />;
-      default:
-        return <Home />;
-    }
+  const handleGenerateClick = () => {
+    setSelectedPage("create-learning-situation");
+  };
+
+  const handleBackToHome = () => {
+    setSelectedPage("home");
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="temporary"
-        open={drawerOpen}
-        onClose={handleDrawerToggle}
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <AppBar
+        position="static"
         sx={{
-          "& .MuiDrawer-paper": { boxSizing: "border-box", width: 240 },
+          bgcolor: "#ffffff",
+          color: theme.palette.text.primary,
+          boxShadow: "none",
+          borderBottom: `1px solid black`,
         }}
       >
-        <List>
-          <ListItem button onClick={() => handleMenuClick("home")}>
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inicio" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleMenuClick("learningSituations")}
+        <Toolbar sx={{ justifyContent: "space-between", minHeight: 56 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={Logo}
+              alt="Logo"
+              style={{ height: 40, marginRight: 16 }}
+            />
+          </Box>
+
+          <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "center" }}>
+            <Button
+              color="inherit"
+              onClick={() => handleMenuClick("home")}
+              sx={{
+                mx: 2,
+                color: theme.palette.text.primary,
+                textTransform: "none",
+                fontWeight: "bold",
+                "&:hover": {
+                  color: theme.palette.ochre.main,
+                  bgcolor: "transparent",
+                },
+              }}
+            >
+              Inicio
+            </Button>
+            <Button
+              color="inherit"
+              onClick={() => handleMenuClick("learningSituations")}
+              sx={{
+                mx: 2,
+                color: theme.palette.text.primary,
+                textTransform: "none",
+                fontWeight: "bold",
+                "&:hover": {
+                  color: theme.palette.ochre.main,
+                  bgcolor: "transparent",
+                },
+              }}
+            >
+              Mis Situaciones de Aprendizaje
+            </Button>
+            <Button
+              color="inherit"
+              onClick={() => handleMenuClick("profile")}
+              sx={{
+                mx: 2,
+                color: theme.palette.text.primary,
+                textTransform: "none",
+                fontWeight: "bold",
+                "&:hover": {
+                  color: theme.palette.ochre.main,
+                  bgcolor: "transparent",
+                },
+              }}
+            >
+              Perfil
+            </Button>
+          </Box>
+
+          <Button
+            color="inherit"
+            onClick={auth.logout}
+            sx={{
+              color: theme.palette.text.primary,
+              textTransform: "none",
+              fontWeight: "bold",
+              "&:hover": {
+                color: theme.palette.ochre.main,
+                bgcolor: "transparent",
+              },
+            }}
           >
-            <ListItemIcon>
-              <SchoolIcon />
-            </ListItemIcon>
-            <ListItemText primary="Mis Situaciones de Aprendizaje" />
-          </ListItem>
-          <ListItem button onClick={() => handleMenuClick("profile")}>
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Perfil" />
-          </ListItem>
-          <ListItem button onClick={auth.logout}>
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary="Desconectar" />
-          </ListItem>
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
-        {renderPageContent()}
+            Desconectar
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        {selectedPage === "home" && (
+          <Home onGenerateClick={handleGenerateClick} />
+        )}
+        {selectedPage === "learningSituations" && <LearningSituations />}
+        {selectedPage === "profile" && <Profile />}
+        {selectedPage === "create-learning-situation" && (
+          <CreateLearningSituation onBackToHome={handleBackToHome} />
+        )}
       </Box>
     </Box>
   );
